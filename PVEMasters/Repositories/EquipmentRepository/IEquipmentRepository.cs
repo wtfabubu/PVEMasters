@@ -10,6 +10,6 @@ namespace PVEMasters.Repositories.EquipmentRepository
     {
         Equipment getEquipment(int equipmentId);
 
-        IEnumerable<Equipment> getAllEquipments();
+        Task<IEnumerable<Equipment>> getAllEquipments();
     }
 }

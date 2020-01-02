@@ -8,8 +8,11 @@ namespace PVEMasters.Services.ChampionsRepository
 {
     public interface IChampionsRepository
     {
-        IEnumerable<Champions> getChampions();
+        Task<IEnumerable<Champions>> getChampions();
 
         Champions getChampion(int champId);
+        int AddChampion(ChampionsOwned champ);
+        Task<IEnumerable<ChampionsOwned>> getAccountChampions(String userName);
+        Task<IEnumerable<Champions>> getAvailableChampionsForAccount();
     }
 }

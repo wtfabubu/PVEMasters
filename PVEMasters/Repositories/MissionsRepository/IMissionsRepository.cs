@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PVEMasters.Repositories.MissionsRepository
@@ -9,12 +10,12 @@ namespace PVEMasters.Repositories.MissionsRepository
     public interface IMissionsRepository
     {
 
-        IEnumerable<Mission> getAllAvailableMissions();
+        Task<IEnumerable<Mission>> getAllAvailableMissions();
 
         IEnumerable<Mission> getAllInProgressMissions();
 
         IEnumerable<Mission> getAllCompletedMissions();
 
-        void StartMission(Mission mission);
+        Task StartMission(Mission mission, String userName);
     }
 }

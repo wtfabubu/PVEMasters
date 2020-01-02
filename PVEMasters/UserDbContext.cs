@@ -20,9 +20,10 @@ namespace PVEMasters
         public virtual DbSet<Mission> Mission { get; set; }
         public virtual DbSet<Reward> Reward { get; set; }
         public virtual DbSet<MissionRwards> MissionRwards { get; set; }
-        public virtual DbSet<ApplicationUser> Users { get; set; }
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public virtual DbSet<MissionStatus> MissionStatus { get; set; }
         public virtual DbSet<MissionsForAccount> MissionsForAccount { get; set; }
         public virtual DbSet<AccountStatistic> AccountStatistic { get; set; }
+        public virtual DbSet<ChampionsOwned> ChampionsOwned { get; set; }
     }
 }

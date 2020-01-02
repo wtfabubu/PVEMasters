@@ -18,10 +18,11 @@ namespace PVEMasters.Services.EquipmentService
             _equipmentRepository = equipmentRepository;
         }
 
-        public IEnumerable<ApiEquipment> getAllEquipments()
+        public async Task<IEnumerable<ApiEquipment>> getAllEquipments()
         {
-            List<Equipment> champions = _equipmentRepository.getAllEquipments().ToList();
-            List<ApiEquipment> championsToReturn = new List<ApiEquipment>();
+            var championsTask = await _equipmentRepository.getAllEquipments();
+            List<Equipment> champions = championsTask.ToList();
+            List <ApiEquipment> championsToReturn = new List<ApiEquipment>();
 
             champions.ForEach(equipment => championsToReturn.Add(EquipmentMapper.convertToApiModel(equipment)));
             return championsToReturn;

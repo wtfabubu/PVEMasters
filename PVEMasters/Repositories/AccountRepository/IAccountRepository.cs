@@ -8,8 +8,9 @@ namespace PVEMasters.Repositories.AccountRepository
 {
     public interface IAccountRepository
     {
-        void AddMissionRewardsToAccount(List<MissionRwards> missionRewards);
-        ApplicationUser getUserByUsername(string userName);
-        void UpdateUser(ApplicationUser usr);
+        Task AddMissionRewardsToAccount(List<MissionRwards> missionRewards);
+        Task<ApplicationUser> getUserByUsername(string userName);
+        Task UpdateUser(ApplicationUser usr);
+        int CreateAccountStatistic(AccountStatistic accountStatistic);
     }
 }

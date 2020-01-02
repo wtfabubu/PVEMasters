@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +21,8 @@ using PVEMasters.Services.ChampionsRepository;
 using PVEMasters.Services.ChampionsService;
 using PVEMasters.Services.EquipmentService;
 using PVEMasters.Services.MissionsService;
+using System;
+using System.Net;
 using System.Text;
 
 namespace PVEMasters
@@ -27,6 +32,14 @@ namespace PVEMasters
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+        }
+
+        public class ExceptionFilter : IExceptionFilter
+        {
+            public void OnException(ExceptionContext context)
+            {
+                context.Result = new JsonResult(context.Exception);
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -75,7 +88,7 @@ namespace PVEMasters
                 };
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(a => a.Filters.Add<ExceptionFilter>()).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +101,7 @@ namespace PVEMasters
             //}
 
             app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PVEMasters.Models;
 
 namespace PVEMasters.Repositories.AccountRepository
@@ -16,22 +17,28 @@ namespace PVEMasters.Repositories.AccountRepository
             _context = context;
         }
 
-        public void AddMissionRewardsToAccount(List<MissionRwards> missionRewards)
+        public async Task AddMissionRewardsToAccount(List<MissionRwards> missionRewards)
         {
             throw new NotImplementedException();
         }
 
-        public ApplicationUser getUserByUsername(string userName)
+        public async Task<ApplicationUser> getUserByUsername(string userName)
         {
-                var usr = _context.Users.Where(user => user.UserName == "Test3@abv.bg").FirstOrDefault();
-                usr.AccountStatistics = _context.AccountStatistic.Where(stats => stats.Id == usr.AccountStatisticsId).FirstOrDefault();
-                return usr;
+                return await _context.Users.Include("AccountStatistics").Where(user => user.UserName == "real@abv.bg").FirstOrDefaultAsync();
         }
 
-        public void UpdateUser(ApplicationUser usr)
+        public async Task UpdateUser(ApplicationUser usr)
         {
                 _context.Update(usr);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+        }
+
+        public int CreateAccountStatistic(AccountStatistic accountStatistic)
+        {
+            _context.Add(accountStatistic);
+            _context.SaveChanges();
+
+            return accountStatistic.Id;
         }
     }
 }

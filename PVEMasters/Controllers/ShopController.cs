@@ -25,15 +25,22 @@ namespace PVEMasters.Controllers
         [HttpGet("champions")]
         public async Task<IActionResult> getChampions()
         {
-            
-            return Ok(new List<ApiChampions>(_championsService.getChampions().ToList()));
+            var result = await _championsService.getChampions();
+            return Ok(new List<ApiChampions>(result.ToList()));
+        }
+
+        [HttpGet("champions")]
+        public async Task<IActionResult> getAvailableChampionsForAccount(String userName)
+        {
+            var result = await _championsService.getAvailableChampionsForAccount(userName);
+            return Ok(new List<ApiChampions>(result.ToList()));
         }
 
         [HttpGet("equipments")]
         public async Task<IActionResult> getEquipments()
         {
-
-            return Ok(new List<ApiEquipment>(_equipmentService.getAllEquipments().ToList()));
+            var result = await _equipmentService.getAllEquipments();
+            return Ok(new List<ApiEquipment>(result.ToList()));
         }
 
     }

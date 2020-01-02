@@ -8,6 +8,8 @@ namespace PVEMasters.Services.AccountService
 {
     public interface IAccountService
     {
-        void AddMissionRewardsToAccount(List<MissionRwards> missionRewards);
+        Task AddMissionRewardsToAccount(List<MissionRwards> missionRewards, String userName);
+        int CreateAccountStatistic(AccountStatistic accountStatistic);
+        Task<ApplicationUser> GetUserProfileByUserName(String userName);
     }
 }

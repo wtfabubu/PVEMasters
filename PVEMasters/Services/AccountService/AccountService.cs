@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PVEMasters.Models;
 using PVEMasters.Repositories.AccountRepository;
+using PVEMasters.RewardsManager;
 
 namespace PVEMasters.Services.AccountService
 {
@@ -17,32 +18,21 @@ namespace PVEMasters.Services.AccountService
             _accountRepository = accountRepository;
         }
 
-        public void AddMissionRewardsToAccount(List<MissionRwards> missionRewards)
+        public async Task AddMissionRewardsToAccount(List<MissionRwards> missionRewards, String userName)
         {
+            ApplicationUser usr = await _accountRepository.getUserByUsername(userName);
+            RewardsClient.AddRewards(RewardsChain.GetChain(), missionRewards, usr);
+            await _accountRepository.UpdateUser(usr);
+        }
 
-                ApplicationUser usr = _accountRepository.getUserByUsername("Test3@abv.bg");
+        public int CreateAccountStatistic(AccountStatistic accountStatistic)
+        {
+            return _accountRepository.CreateAccountStatistic(accountStatistic);
+        }
 
-                foreach (var missionReward in missionRewards)
-                {
-                    if (missionReward.RewardName == "Experience")
-                    {
-                        usr.AccountStatistics.Experience += missionReward.Amount;
-                        if (usr.AccountStatistics.Experience > usr.AccountStatistics.Lvl * 1000)
-                        {
-                            usr.AccountStatistics.Experience -= usr.AccountStatistics.Lvl * 1000;
-                            usr.AccountStatistics.Lvl++;
-                        }
-                    }
-                    else if (missionReward.RewardName == "Gold")
-                    {
-                        usr.AccountStatistics.Gold += missionReward.Amount;
-                    }
-                    else
-                    {
-
-                    }
-                }
-                _accountRepository.UpdateUser(usr);
+        public async Task<ApplicationUser> GetUserProfileByUserName(String userName)
+        {
+            return await _accountRepository.getUserByUsername(userName);
         }
     }
 }

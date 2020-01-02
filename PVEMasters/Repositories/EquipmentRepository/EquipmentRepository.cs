@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PVEMasters.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace PVEMasters.Repositories.EquipmentRepository
 {
@@ -15,9 +16,9 @@ namespace PVEMasters.Repositories.EquipmentRepository
             _context = context;
         }
 
-        public IEnumerable<Equipment> getAllEquipments()
+        public async Task<IEnumerable<Equipment>> getAllEquipments()
         {
-            return _context.Equipment.OrderBy(a => a.Name).ToList();
+            return await _context.Equipment.OrderBy(a => a.Name).ToListAsync();
         }
 
         public Equipment getEquipment(int equipmentId)

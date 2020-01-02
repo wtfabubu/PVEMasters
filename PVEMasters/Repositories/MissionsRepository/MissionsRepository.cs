@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using PVEMasters.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace PVEMasters.Repositories.MissionsRepository
 {
@@ -21,10 +23,11 @@ namespace PVEMasters.Repositories.MissionsRepository
             this.signInManager = signInManager;
         }
 
-        public IEnumerable<Mission> getAllAvailableMissions()
+        public async Task<IEnumerable<Mission>> getAllAvailableMissions()
         {
             //Edit this query(this is an example of bad code)
-            List<Mission> missions = _context.Mission.Where(mission => mission.AccountLvlRequired <= _context.Users.Where(user => user.UserName == "Test3@abv.bg").FirstOrDefault().AccountStatistics.Lvl).ToList();
+            var usr = await _context.ApplicationUsers.Include("AccountStatistics").Where(user => user.UserName == "Test3@abv.bg").FirstOrDefaultAsync();
+            List<Mission> missions = _context.Mission.Where(mission => mission.AccountLvlRequired <= usr.AccountStatistics.Lvl).ToList();
             missions.ForEach(mission => mission.MissionRwards = _context.MissionRwards.Where(mr => mr.MissionId == mission.Id).ToList());
             return missions;
         }
@@ -39,13 +42,13 @@ namespace PVEMasters.Repositories.MissionsRepository
             throw new NotImplementedException();
         }
 
-        public void StartMission(Mission mission)
+        public async Task StartMission(Mission mission, String userName)
         {
             //Edit this query(this is an example of bad code)
             var missionStatus = _context.MissionStatus.Where(status => status.Status == "Completed").FirstOrDefault();
-            MissionsForAccount missionForAccount = new MissionsForAccount { AccountUsername = "Test3@abv.bg", MissionId = mission.Id, StatusId = missionStatus.Id, Status = missionStatus };
+            MissionsForAccount missionForAccount = new MissionsForAccount { AccountUsername = userName, MissionId = mission.Id, StatusId = missionStatus.Id, Status = missionStatus };
             _context.MissionsForAccount.Add(missionForAccount);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
     }
 }

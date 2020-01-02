@@ -8,7 +8,7 @@ namespace PVEMasters.Services.EquipmentService
 {
     public interface IEquipmentService
     {
-        IEnumerable<ApiEquipment> getAllEquipments();
+        Task<IEnumerable<ApiEquipment>> getAllEquipments();
 
         ApiEquipment getEquipment(int champId);
     }

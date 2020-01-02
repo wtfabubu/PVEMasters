@@ -7,6 +7,8 @@ using PVEMasters.ModelMappers;
 using PVEMasters.Models;
 using PVEMasters.Repositories.MissionsRepository;
 using PVEMasters.Services.AccountService;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace PVEMasters.Services.MissionsService
 {
@@ -21,9 +23,10 @@ namespace PVEMasters.Services.MissionsService
             _accountService = accountService;
         }
 
-        public IEnumerable<ApiMission> getAllAvailableMissions()
+        public async Task<IEnumerable<ApiMission>> getAllAvailableMissions()
         {
-            List<Mission> missions = _missionsRepository.getAllAvailableMissions().ToList();
+            var missionsTask = await _missionsRepository.getAllAvailableMissions();
+            List<Mission> missions = missionsTask.ToList();
             List<ApiMission> missionsToReturn = new List<ApiMission>();
 
             missions.ForEach(champ => missionsToReturn.Add(MissionsMapper.convertToApiModel(champ)));
@@ -40,12 +43,12 @@ namespace PVEMasters.Services.MissionsService
             throw new NotImplementedException();
         }
 
-        public void StartMission(ApiMission mission)
+        public async Task StartMission(ApiMission mission, String userName)
         {
             var miss = MissionsMapper.converToDbModel(mission);
             
-            _accountService.AddMissionRewardsToAccount(miss.MissionRwards.ToList());
-            _missionsRepository.StartMission(miss);
+            await _accountService.AddMissionRewardsToAccount(miss.MissionRwards.ToList(), userName);
+            await _missionsRepository.StartMission(miss, userName);
         }
     }
 }
