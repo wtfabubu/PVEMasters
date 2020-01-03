@@ -28,7 +28,9 @@ namespace PVEMasters.Controllers
         [HttpGet("AvailableMissions")]
         public async Task<IActionResult> getAvailableMissions()
         {
-            var result = await _missionsService.getAllAvailableMissions();
+
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _missionsService.getAllAvailableMissions(user.UserName);
             return Ok(new List<ApiMission>(result.ToList()));
         }
 
@@ -36,8 +38,7 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> Post([FromBody]ApiModels.ApiMission mission)
         {
             var user = await _userManager.GetUserAsync(User);
-            var userName = user.UserName;
-            await _missionsService.StartMission(mission, userName);
+            await _missionsService.StartMission(mission, user.UserName);
             return Ok();
         }
 

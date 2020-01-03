@@ -5,10 +5,6 @@ namespace PVEMasters.Models
 {
     public partial class AccountStatistic
     {
-        public AccountStatistic()
-        {
-        }
-
         public int Id { get; set; }
         public int? ChampionsOwned { get; set; } = 3;
         public int? AchievementsCompleted { get; set; } = 0;

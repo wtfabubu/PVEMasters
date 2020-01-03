@@ -15,5 +15,6 @@ namespace PVEMasters.Services.ChampionsService
         int AddChampion(ChampionsOwned champ1);
         Task<IEnumerable<ApiChampionsOwned>> getAccountChampions(String userName);
         Task<IEnumerable<ApiChampions>> getAvailableChampionsForAccount(String userName);
+        Task<String> BuyChampionForUser(ApiChampions champion, string userName);
     }
 }

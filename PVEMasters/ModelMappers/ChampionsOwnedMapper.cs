@@ -13,13 +13,10 @@ namespace PVEMasters.ModelMappers
         {
             return new ApiChampionsOwned
             {
-                Agility = Model.Agility,
+                ChampionStats = CreateChampionStats(Model),
                 Equipped = Model.Equipped,
                 Experience = Model.Experience,
-                Health = Model.Health,
                 Lvl = Model.Lvl,
-                MagicPower = Model.MagicPower,
-                Strength = Model.Strength,
                 Champions = new ApiChampions
                 {
                     Name = Model.Champions.Name,
@@ -35,14 +32,14 @@ namespace PVEMasters.ModelMappers
         {
             return new ChampionsOwned
             {
-
-                Agility = ApiModel.Agility,
+                //TODO:
+                //Agility = ApiModel.Agility,
                 Equipped = ApiModel.Equipped,
                 Experience = ApiModel.Experience,
-                Health = ApiModel.Health,
+                //Health = ApiModel.Health,
                 Lvl = ApiModel.Lvl,
-                MagicPower = ApiModel.MagicPower,
-                Strength = ApiModel.Strength,
+                //MagicPower = ApiModel.MagicPower,
+                //Strength = ApiModel.Strength,
                 Champions = new Champions
                 {
                     Name = ApiModel.Champions.Name,
@@ -52,6 +49,17 @@ namespace PVEMasters.ModelMappers
                     Story = ApiModel.Champions.Story
                 }
             };
+        }
+
+        private static List<ApiStats> CreateChampionStats(ChampionsOwned stats)
+        {
+            List<ApiStats> equipmentStatsToReturn = new List<ApiStats>();
+
+            foreach (var equipmentStat in stats.ChampionOwnedStats)
+            {
+                equipmentStatsToReturn.Add(ChampionOwnedStatMapper.convertToApiModel(equipmentStat));
+            }
+            return equipmentStatsToReturn;
         }
     }
 }

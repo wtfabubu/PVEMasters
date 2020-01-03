@@ -43,9 +43,9 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> Register([FromBody] Credentials credentials)
         {
             int accStatId = accountService.CreateAccountStatistic(new AccountStatistic());
-            ChampionsOwned champ1 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 4, Agility = 10, Strength = 5, MagicPower = 2, Experience = 0, Health = 100, Lvl = 1};
-            ChampionsOwned champ2 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 5, Agility = 5, Strength = 10, MagicPower = 2, Experience = 0, Health = 100, Lvl = 1 };
-            ChampionsOwned champ3 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 6, Agility = 2, Strength = 5, MagicPower = 10, Experience = 0, Health = 100, Lvl = 1 };
+            ChampionsOwned champ1 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 4, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ2 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 5, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ3 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 6, Experience = 0, Lvl = 1 };
             championsService.AddChampion(champ1);
             championsService.AddChampion(champ2);
             championsService.AddChampion(champ3);
@@ -96,6 +96,16 @@ namespace PVEMasters.Controllers
             var userName = user.UserName;
             var userProfile = await accountService.GetUserProfileByUserName(userName);
             return Ok(userProfile);
+        }
+
+        private List<ChampionOwnedStats> CreateChampionOwnedStats(int champId, int agility, int str, int health, int magicPower)
+        {
+            List<ChampionOwnedStats> statList = new List<ChampionOwnedStats>();
+            statList.Add(new ChampionOwnedStats { StatId = 1, ChampionsOwnedId = champId, Amount = agility });
+            statList.Add(new ChampionOwnedStats { StatId = 2, ChampionsOwnedId = champId, Amount = str });
+            statList.Add(new ChampionOwnedStats { StatId = 3, ChampionsOwnedId = champId, Amount = health });
+            statList.Add(new ChampionOwnedStats { StatId = 4, ChampionsOwnedId = champId, Amount = magicPower });
+            return statList;
         }
     }
 }

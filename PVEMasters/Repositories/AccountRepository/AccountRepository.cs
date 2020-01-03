@@ -24,7 +24,7 @@ namespace PVEMasters.Repositories.AccountRepository
 
         public async Task<ApplicationUser> getUserByUsername(string userName)
         {
-                return await _context.Users.Include("AccountStatistics").Where(user => user.UserName == "real@abv.bg").FirstOrDefaultAsync();
+                return await _context.Users.Include("AccountStatistics").Where(user => user.UserName == userName).FirstOrDefaultAsync();
         }
 
         public async Task UpdateUser(ApplicationUser usr)

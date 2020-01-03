@@ -1,4 +1,5 @@
-﻿using PVEMasters.Models;
+﻿using PVEMasters.ApiModels;
+using PVEMasters.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace PVEMasters.Services.ChampionsRepository
         Champions getChampion(int champId);
         int AddChampion(ChampionsOwned champ);
         Task<IEnumerable<ChampionsOwned>> getAccountChampions(String userName);
-        Task<IEnumerable<Champions>> getAvailableChampionsForAccount();
+        Task<IEnumerable<Champions>> getAvailableChampionsForAccount(String userName);
+        Task<String> BuyChampionForAccount(ChampionsOwned champion);
+        Task<Champions> getChampionByName(string name);
     }
 }

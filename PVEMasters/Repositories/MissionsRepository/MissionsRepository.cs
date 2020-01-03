@@ -23,10 +23,10 @@ namespace PVEMasters.Repositories.MissionsRepository
             this.signInManager = signInManager;
         }
 
-        public async Task<IEnumerable<Mission>> getAllAvailableMissions()
+        public async Task<IEnumerable<Mission>> getAllAvailableMissions(String userName)
         {
             //Edit this query(this is an example of bad code)
-            var usr = await _context.ApplicationUsers.Include("AccountStatistics").Where(user => user.UserName == "Test3@abv.bg").FirstOrDefaultAsync();
+            var usr = await _context.ApplicationUsers.Include("AccountStatistics").Where(user => user.UserName == userName).FirstOrDefaultAsync();
             List<Mission> missions = _context.Mission.Where(mission => mission.AccountLvlRequired <= usr.AccountStatistics.Lvl).ToList();
             missions.ForEach(mission => mission.MissionRwards = _context.MissionRwards.Where(mr => mr.MissionId == mission.Id).ToList());
             return missions;

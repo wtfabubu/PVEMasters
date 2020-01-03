@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace PVEMasters.Models
 {
@@ -11,7 +10,6 @@ namespace PVEMasters.Models
             MissionRwards = new HashSet<MissionRwards>();
         }
 
-        [Key]
         public string Name { get; set; }
         public string Details { get; set; }
 

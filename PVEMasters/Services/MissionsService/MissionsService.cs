@@ -23,9 +23,9 @@ namespace PVEMasters.Services.MissionsService
             _accountService = accountService;
         }
 
-        public async Task<IEnumerable<ApiMission>> getAllAvailableMissions()
+        public async Task<IEnumerable<ApiMission>> getAllAvailableMissions(String userName)
         {
-            var missionsTask = await _missionsRepository.getAllAvailableMissions();
+            var missionsTask = await _missionsRepository.getAllAvailableMissions(userName);
             List<Mission> missions = missionsTask.ToList();
             List<ApiMission> missionsToReturn = new List<ApiMission>();
 

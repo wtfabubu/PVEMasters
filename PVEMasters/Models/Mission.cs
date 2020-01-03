@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace PVEMasters.Models
 {
@@ -12,7 +11,6 @@ namespace PVEMasters.Models
             MissionsForAccount = new HashSet<MissionsForAccount>();
         }
 
-        [Key]
         public int Id { get; set; }
         public int? AverageLvlRequired { get; set; }
         public string Name { get; set; }

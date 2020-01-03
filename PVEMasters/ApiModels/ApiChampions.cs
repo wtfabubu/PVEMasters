@@ -12,5 +12,7 @@ namespace PVEMasters.ApiModels
         public string Avatar { get; set; }
         public string Icon { get; set; }
         public int Cost { get; set; }
+
+        public ICollection<ApiStats> ChampionStats { get; set; }
     }
 }

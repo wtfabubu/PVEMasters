@@ -10,7 +10,7 @@ namespace PVEMasters.Services.MissionsService
 {
     public interface IMissionsService
     {
-        Task<IEnumerable<ApiMission>> getAllAvailableMissions();
+        Task<IEnumerable<ApiMission>> getAllAvailableMissions(String userName);
 
         IEnumerable<ApiMission> getAllInProgressMissions();
 

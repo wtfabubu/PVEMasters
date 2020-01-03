@@ -8,6 +8,7 @@ namespace PVEMasters.Models
         public Champions()
         {
             ChampionsOwned = new HashSet<ChampionsOwned>();
+            ChampionsStats = new HashSet<ChampionsStats>();
         }
 
         public int Id { get; set; }
@@ -18,5 +19,6 @@ namespace PVEMasters.Models
         public int Cost { get; set; }
 
         public ICollection<ChampionsOwned> ChampionsOwned { get; set; }
+        public ICollection<ChampionsStats> ChampionsStats { get; set; }
     }
 }
