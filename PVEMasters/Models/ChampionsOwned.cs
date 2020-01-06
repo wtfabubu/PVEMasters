@@ -11,13 +11,14 @@ namespace PVEMasters.Models
         }
 
         public int Id { get; set; }
-        public string AccountUsername { get; set; }
+        public string AccountId { get; set; }
         public int ChampionsId { get; set; }
         public int Lvl { get; set; }
         public int Experience { get; set; }
         public bool Equipped { get; set; }
 
+        public ApplicationUser Account { get; set; }
         public Champions Champions { get; set; }
-        public ICollection<ChampionOwnedStats> ChampionOwnedStats { get; set; }
+        public ICollection<ChampionOwnedStats> ChampionOwnedStats { get; set; }     
     }
 }

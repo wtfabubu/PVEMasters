@@ -17,5 +17,9 @@ namespace PVEMasters.Services.ChampionsRepository
         Task<IEnumerable<Champions>> getAvailableChampionsForAccount(String userName);
         Task<String> BuyChampionForAccount(ChampionsOwned champion);
         Task<Champions> getChampionByName(string name);
+        Task<int> GetNumberOfEquippedChampionsForAccount(string userName);
+        Task<string> EquipChampion(ChampionsOwned champion);
+        Task<ChampionsOwned> GetChampionOwnedFromDB(string champName, string userName);
+        Task<string> UnequipChampion(ChampionsOwned champ);
     }
 }

@@ -12,10 +12,10 @@ namespace PVEMasters.Repositories.MissionsRepository
 
         Task<IEnumerable<Mission>> getAllAvailableMissions(String userName);
 
-        IEnumerable<Mission> getAllInProgressMissions();
-
-        IEnumerable<Mission> getAllCompletedMissions();
+        Task<IEnumerable<MissionsForAccount>> GetAllMissionsWithGivenStatus(String userName, String status);
 
         Task StartMission(Mission mission, String userName);
+
+        Task CompleteMission(int missionId);
     }
 }

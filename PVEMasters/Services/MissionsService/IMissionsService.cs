@@ -12,10 +12,14 @@ namespace PVEMasters.Services.MissionsService
     {
         Task<IEnumerable<ApiMission>> getAllAvailableMissions(String userName);
 
+        Task<IEnumerable<ApiMission>> GetAllMissionsWithGivenStatus(String userName, String status);
+
         IEnumerable<ApiMission> getAllInProgressMissions();
 
         IEnumerable<ApiMission> getAllCompletedMissions();
 
         Task StartMission(ApiMission mission, String userName);
+
+        Task CompleteMission(ApiMission mission, String userName);
     }
 }

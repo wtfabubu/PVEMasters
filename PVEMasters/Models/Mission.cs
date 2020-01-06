@@ -15,6 +15,7 @@ namespace PVEMasters.Models
         public int? AverageLvlRequired { get; set; }
         public string Name { get; set; }
         public int? AccountLvlRequired { get; set; }
+        public int Duration { get; set; }
 
         public ICollection<MissionRwards> MissionRwards { get; set; }
         public ICollection<MissionsForAccount> MissionsForAccount { get; set; }

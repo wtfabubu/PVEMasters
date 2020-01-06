@@ -73,9 +73,9 @@ namespace PVEMasters
 
             modelBuilder.Entity<ChampionsOwned>(entity =>
             {
-                entity.Property(e => e.AccountUsername)
+                entity.Property(e => e.AccountId)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.Champions)
                     .WithMany(p => p.ChampionsOwned)

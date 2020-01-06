@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using PVEMasters.ApiModels;
+using PVEMasters.ModelMappers;
 using PVEMasters.Models;
 using PVEMasters.Services.AccountService;
 using PVEMasters.Services.ChampionsService;
@@ -43,13 +45,13 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> Register([FromBody] Credentials credentials)
         {
             int accStatId = accountService.CreateAccountStatistic(new AccountStatistic());
-            ChampionsOwned champ1 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 4, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ2 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 5, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ3 = new ChampionsOwned { AccountUsername = credentials.Username, ChampionsId = 6, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1 };
             championsService.AddChampion(champ1);
             championsService.AddChampion(champ2);
             championsService.AddChampion(champ3);
-            var user = new ApplicationUser { UserName = credentials.Username, Email = credentials.Username, Gender = credentials.Gender, InGameName = credentials.InGameName, AccountStatisticsId = accStatId};
+            var user = new ApplicationUser { UserName = credentials.Username, Email = credentials.Username, Gender = credentials.Gender, InGameName = credentials.InGameName, AccountStatisticsId = accStatId };
 
             var result = await _userManager.CreateAsync(user, credentials.Password);
 
@@ -58,7 +60,7 @@ namespace PVEMasters.Controllers
 
             await signInManager.SignInAsync(user, isPersistent: false);
 
-            return Ok(CreateToken(user));
+            return Ok(new ApiAuth { Token = CreateToken(user), UserName = credentials.Username });
 
         }
 
@@ -72,7 +74,7 @@ namespace PVEMasters.Controllers
 
             var user = await _userManager.FindByEmailAsync(credentials.Username);
 
-            return Ok(CreateToken(user));
+            return Ok(new ApiAuth { Token = CreateToken(user), UserName = credentials.Username });
         }
 
         string CreateToken(ApplicationUser user)
@@ -96,6 +98,23 @@ namespace PVEMasters.Controllers
             var userName = user.UserName;
             var userProfile = await accountService.GetUserProfileByUserName(userName);
             return Ok(userProfile);
+        }
+
+        [HttpGet("getAvailablePVPAccounts")]
+        public async Task<IActionResult> GetAvailablePVPAccounts()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userName = user.UserName;
+            var userProfile = await accountService.GetAvailablePVPAccounts(userName);
+            return Ok(userProfile);
+        }
+
+        [HttpPost("attackOpponent")]
+        public async Task<IActionResult> AttackOpponent([FromBody]ApiProfile account)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await accountService.AttackOpponent(account, user.UserName);
+            return Ok(result);
         }
 
         private List<ChampionOwnedStats> CreateChampionOwnedStats(int champId, int agility, int str, int health, int magicPower)

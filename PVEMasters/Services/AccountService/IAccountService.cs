@@ -1,4 +1,5 @@
-﻿using PVEMasters.Models;
+﻿using PVEMasters.ApiModels;
+using PVEMasters.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,9 @@ namespace PVEMasters.Services.AccountService
     {
         Task AddMissionRewardsToAccount(List<MissionRwards> missionRewards, String userName);
         int CreateAccountStatistic(AccountStatistic accountStatistic);
-        Task<ApplicationUser> GetUserProfileByUserName(String userName);
+        Task<ApiProfile> GetUserProfileByUserName(String userName);
+        Task<ICollection<ApiProfile>> GetAvailablePVPAccounts(string userName);
+        string GetAccountIdByUserName(string username);
+        Task<string> AttackOpponent(ApiProfile opponent, string userName);
     }
 }

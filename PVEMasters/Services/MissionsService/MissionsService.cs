@@ -47,8 +47,30 @@ namespace PVEMasters.Services.MissionsService
         {
             var miss = MissionsMapper.converToDbModel(mission);
             
-            await _accountService.AddMissionRewardsToAccount(miss.MissionRwards.ToList(), userName);
             await _missionsRepository.StartMission(miss, userName);
+        }
+
+        public async Task CompleteMission(ApiMission mission, String userName)
+        {
+            var miss = MissionsMapper.converToDbModel(mission);
+
+            await _accountService.AddMissionRewardsToAccount(miss.MissionRwards.ToList(), userName);
+            await _missionsRepository.CompleteMission(mission.MissionForAccountId);
+        }
+
+        public async Task<IEnumerable<ApiMission>> GetAllMissionsWithGivenStatus(string userName, string status)
+        {
+            var missions = await _missionsRepository.GetAllMissionsWithGivenStatus(userName, status);
+            List<ApiMission> missionsToReturn = new List<ApiMission>();
+            missions.ToList().ForEach(misson => missionsToReturn.Add(CreateMission(misson)));
+            return missionsToReturn;
+        }
+
+        private ApiMission CreateMission(MissionsForAccount misson)
+        {
+            var ApiMisson = MissionsMapper.convertToApiModel(misson.Mission);
+            ApiMisson.MissionForAccountId = misson.Id;
+            return ApiMisson;
         }
     }
 }

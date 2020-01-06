@@ -11,12 +11,12 @@ namespace PVEMasters.ModelMappers
     {
         public static ApiMission convertToApiModel(Mission Model)
         {
-            return new ApiMission {Id = Model.Id, Name = Model.Name, AverageLvlRequired = (int)Model.AverageLvlRequired, AccountLvlRequired = (int)Model.AccountLvlRequired, MissionRewards = CreateMissionRewards(Model.MissionRwards)  };
+            return new ApiMission {Id = Model.Id, Name = Model.Name, AverageLvlRequired = (int)Model.AverageLvlRequired, AccountLvlRequired = (int)Model.AccountLvlRequired, Duration = Model.Duration, MissionRewards = CreateMissionRewards(Model.MissionRwards)  };
         }
 
         public static Mission converToDbModel(ApiMission ApiModel)
         {
-            return new Mission {Id = ApiModel.Id, Name = ApiModel.Name, AccountLvlRequired = ApiModel.AccountLvlRequired, AverageLvlRequired = ApiModel.AverageLvlRequired, MissionRwards = CreateMissionRewardsDBObject(ApiModel.MissionRewards) };
+            return new Mission {Id = ApiModel.Id, Name = ApiModel.Name, AccountLvlRequired = ApiModel.AccountLvlRequired, AverageLvlRequired = ApiModel.AverageLvlRequired, Duration = ApiModel.Duration, MissionRwards = CreateMissionRewardsDBObject(ApiModel.MissionRewards) };
         }
 
         private static List<ApiMissionRewards> CreateMissionRewards(ICollection<MissionRwards> missionRwards)

@@ -35,11 +35,36 @@ namespace PVEMasters.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]ApiModels.ApiMission mission)
+        public async Task<IActionResult> Post([FromBody]ApiMission mission)
         {
             var user = await _userManager.GetUserAsync(User);
             await _missionsService.StartMission(mission, user.UserName);
             return Ok();
+        }
+
+        [HttpPost("postCompleteMission")]
+        public async Task<IActionResult> PostCompleteMission([FromBody]ApiMission mission)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            await _missionsService.CompleteMission(mission, user.UserName);
+            return Ok();
+        }
+        
+
+       [HttpGet("getAllInProgressMissionForAccount")]
+        public async Task<IActionResult> GetAllInProgressMissionForAccount()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.UserName, "In Progress");
+            return Ok(result);
+        }
+
+        [HttpGet("getAllCompletedMissionForAccount")]
+        public async Task<IActionResult> GetAllCompletedMissionForAccount()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.UserName, "Completed");
+            return Ok(result);
         }
 
     }

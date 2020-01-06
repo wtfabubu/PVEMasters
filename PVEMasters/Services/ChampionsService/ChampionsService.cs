@@ -30,7 +30,7 @@ namespace PVEMasters.Services.ChampionsService
         public async Task<string> BuyChampionForUser(ApiChampions champion, string userName)
         {
             var account = await _accountRepository.getUserByUsername(userName);
-            if(account.AccountStatistics.Gold < champion.Cost)
+            if (account.AccountStatistics.Gold < champion.Cost)
             {
                 return "Insufficient gold!";
             }
@@ -52,8 +52,6 @@ namespace PVEMasters.Services.ChampionsService
 
         public async Task<IEnumerable<ApiChampions>> getAvailableChampionsForAccount(string userName)
         {
-
-
             var championsTask = await _championsRepository.getAvailableChampionsForAccount(userName);
             List<Champions> champions = championsTask.ToList();
             List<ApiChampions> championsToReturn = new List<ApiChampions>();
@@ -73,17 +71,47 @@ namespace PVEMasters.Services.ChampionsService
         {
             var championsTask = await _championsRepository.getChampions();
             List<Champions> champions = championsTask.ToList();
-            List<ApiChampions> championsToReturn = new List<ApiChampions>(); 
+            List<ApiChampions> championsToReturn = new List<ApiChampions>();
 
             champions.ForEach(champ => championsToReturn.Add(ChampionsMapper.convertToApiModel(champ)));
             return championsToReturn;
         }
 
-        private static ChampionsOwned CreateChampionForAccount(string userName, Champions champ)
+        public async Task<string> EquipChampion(string userName, ApiChampionsOwned champion)
+        {
+            string result = "You can have a maximum of 3 champions equipped";
+            var equippedChampions = await GetNumberOfEquippedChampionsForAccount(userName);
+            ChampionsOwned champ = await GetChampionOwnedFromDB(champion, userName);
+            if (equippedChampions < 3)
+            {
+                champ.Equipped = true;
+                result = await _championsRepository.EquipChampion(champ);
+            }
+            return result;
+        }
+
+        public async Task<string> UnequipChampion(string userName, ApiChampionsOwned champion)
+        {
+            ChampionsOwned champ = await GetChampionOwnedFromDB(champion, userName);
+            champ.Equipped = false;
+            return await _championsRepository.UnequipChampion(champ);
+        }
+
+        public async Task<int> GetNumberOfEquippedChampionsForAccount(string userName)
+        {
+            return await _championsRepository.GetNumberOfEquippedChampionsForAccount(userName);
+        }
+
+        private async Task<ChampionsOwned> GetChampionOwnedFromDB(ApiChampionsOwned champion, string userName)
+        {
+            return await _championsRepository.GetChampionOwnedFromDB(champion.Champions.Name, userName);
+        }
+
+        private ChampionsOwned CreateChampionForAccount(string userName, Champions champ)
         {
             return new ChampionsOwned
             {
-                AccountUsername = userName,
+                AccountId = _accountRepository.GetAccountIdByUserName(userName),
                 ChampionsId = champ.Id,
                 Equipped = false,
                 Experience = 0,

@@ -34,5 +34,21 @@ namespace PVEMasters.Controllers
             var result = await _championsService.getAccountChampions(userName);
             return Ok(new List<ApiChampionsOwned>(result.ToList()));
         }
+
+        [HttpPost("postEquipChampion")]
+        public async Task<IActionResult> EquipChampion([FromBody]ApiChampionsOwned champion)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _championsService.EquipChampion(user.UserName, champion);
+            return Ok(result);
+        }
+
+        [HttpPost("postUnequipChampion")]
+        public async Task<IActionResult> UnequipChampion([FromBody]ApiChampionsOwned champion)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var result = await _championsService.UnequipChampion(user.UserName, champion);
+            return Ok(result);
+        }
     }
 }

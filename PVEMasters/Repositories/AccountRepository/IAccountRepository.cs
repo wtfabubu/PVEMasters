@@ -12,5 +12,7 @@ namespace PVEMasters.Repositories.AccountRepository
         Task<ApplicationUser> getUserByUsername(string userName);
         Task UpdateUser(ApplicationUser usr);
         int CreateAccountStatistic(AccountStatistic accountStatistic);
+        Task<ICollection<ApplicationUser>> GetAvailablePVPAccounts(string userName);
+        string GetAccountIdByUserName(string username);
     }
 }
