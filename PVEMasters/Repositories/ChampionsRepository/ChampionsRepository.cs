@@ -92,6 +92,11 @@ namespace PVEMasters.Services.ChampionsRepository
             return "Champion unequipped successfully";
         }
 
+        public async Task<int> UpdateAccount()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
         private List<ChampionOwnedStats> CreateChampionOwnedStats(int champId)
         {
             List<ChampionOwnedStats> statList = new List<ChampionOwnedStats>();

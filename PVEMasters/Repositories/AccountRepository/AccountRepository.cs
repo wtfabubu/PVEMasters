@@ -47,7 +47,7 @@ namespace PVEMasters.Repositories.AccountRepository
                                        .ThenInclude(champOwnedStat => champOwnedStat.Stat)
                                        .Include(account => account.ChampionsOwned)
                                        .ThenInclude(champOwned => champOwned.Champions)
-                                       .Where(user => user.UserName != userName && (user.AccountStatistics.Lvl <= currentUser.AccountStatistics.Lvl+2 && user.AccountStatistics.Lvl >= currentUser.AccountStatistics.Lvl - 2))
+                                       .Where(user => user.UserName != userName && (user.AccountStatistics.Lvl <= currentUser.AccountStatistics.Lvl+2 && user.AccountStatistics.Lvl >= currentUser.AccountStatistics.Lvl - 2) && user.ChampionsOwned.Where(champ => champ.Equipped == true).Count() > 2)
                                        .ToListAsync();
         }
 
@@ -57,6 +57,11 @@ namespace PVEMasters.Repositories.AccountRepository
             _context.SaveChanges();
 
             return accountStatistic.Id;
+        }
+
+        public async Task<int> UpdateAccount()
+        {
+            return await _context.SaveChangesAsync();
         }
     }
 }

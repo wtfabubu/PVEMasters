@@ -37,6 +37,8 @@ namespace PVEMasters.Services.ChampionsService
             Champions champ = await GetChampionFromDB(champion);
             ChampionsOwned champOwned = CreateChampionForAccount(userName, champ);
             await _championsRepository.BuyChampionForAccount(champOwned);
+            account.AccountStatistics.Gold -= champion.Cost;
+            await _accountRepository.UpdateAccount();
             return "Character successfully added to your collection!";
         }
 

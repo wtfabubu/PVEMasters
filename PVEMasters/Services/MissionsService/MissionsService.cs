@@ -70,6 +70,7 @@ namespace PVEMasters.Services.MissionsService
         {
             var ApiMisson = MissionsMapper.convertToApiModel(misson.Mission);
             ApiMisson.MissionForAccountId = misson.Id;
+            ApiMisson.EndDate = misson.EndDateTime.ToString();
             return ApiMisson;
         }
     }

@@ -50,19 +50,24 @@ namespace PVEMasters.Controllers
 
 
             var result = await _userManager.CreateAsync(user, credentials.Password);
+            ApiResponse response = new ApiResponse();
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+            {                
+                result.Errors.ToList().ForEach(err => response.Error += err.Description + " ");
+                return Ok(response);
+            }
 
-            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1, Equipped = true };
+            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1, Equipped = true };
+            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1, Equipped = true };
             championsService.AddChampion(champ1);
             championsService.AddChampion(champ2);
             championsService.AddChampion(champ3);
             await signInManager.SignInAsync(user, isPersistent: false);
 
-            return Ok(new ApiAuth { Token = CreateToken(user), UserName = credentials.Username });
+            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username };
+            return Ok(response);
 
         }
 
@@ -71,12 +76,18 @@ namespace PVEMasters.Controllers
         {
             var result = await signInManager.PasswordSignInAsync(credentials.Username, credentials.Password, false, false);
 
+            ApiResponse response = new ApiResponse();
+
             if (!result.Succeeded)
-                return BadRequest();
+            {
+                response.Error += "Username or password is wrong!";
+                return Ok(response);
+            }
 
             var user = await _userManager.FindByEmailAsync(credentials.Username);
 
-            return Ok(new ApiAuth { Token = CreateToken(user), UserName = credentials.Username });
+            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username };
+            return Ok(response);
         }
 
         string CreateToken(ApplicationUser user)

@@ -13,6 +13,7 @@ namespace PVEMasters.ApiModels
         public string Name { get; set; }
         public int AccountLvlRequired { get; set; }
         public int Duration { get; set; }
+        public string EndDate { get; set; }
 
         public ICollection<ApiMissionRewards> MissionRewards { get; set; }
         //public ICollection<MissionsForAccount> MissionsForAccount { get; set; }

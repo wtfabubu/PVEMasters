@@ -31,6 +31,8 @@ namespace PVEMasters.Services.EquipmentService
             Equipment equip = await GetEquipmentFromDB(equipment);
             EquipmentOwned equipOwned = CreateEquipmentForAccount(userName, equip);
             await _equipmentRepository.BuyEquipmentForAccount(equipOwned);
+            account.AccountStatistics.Gold -= equipment.Cost;
+            await _accountRepository.UpdateAccount();
             return "Equipment successfully added to your collection!";
         }
 
