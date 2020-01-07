@@ -7,7 +7,7 @@ namespace PVEMasters.RewardsManager
         public static AbstractRewardHandler GetChain()
         {
             AbstractRewardHandler chain = new ExperienceHandler();
-            chain.SetNext(new GoldHandler().SetNext(new ChampionExperienceHandler()));
+            chain.SetNext(new GoldHandler()).SetNext(new ChampionExperienceHandler());
             return chain;
         }
     }

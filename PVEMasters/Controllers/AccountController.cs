@@ -45,19 +45,21 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> Register([FromBody] Credentials credentials)
         {
             int accStatId = accountService.CreateAccountStatistic(new AccountStatistic());
-            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1 };
-            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1 };
-            championsService.AddChampion(champ1);
-            championsService.AddChampion(champ2);
-            championsService.AddChampion(champ3);
+
             var user = new ApplicationUser { UserName = credentials.Username, Email = credentials.Username, Gender = credentials.Gender, InGameName = credentials.InGameName, AccountStatisticsId = accStatId };
+
 
             var result = await _userManager.CreateAsync(user, credentials.Password);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
+            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1 };
+            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1 };
+            championsService.AddChampion(champ1);
+            championsService.AddChampion(champ2);
+            championsService.AddChampion(champ3);
             await signInManager.SignInAsync(user, isPersistent: false);
 
             return Ok(new ApiAuth { Token = CreateToken(user), UserName = credentials.Username });
