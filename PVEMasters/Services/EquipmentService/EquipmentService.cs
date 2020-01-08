@@ -21,24 +21,24 @@ namespace PVEMasters.Services.EquipmentService
             _equipmentRepository = equipmentRepository;
         }
 
-        public async Task<string> BuyEquipmentForUser(ApiEquipment equipment, string userName)
+        public async Task<string> BuyEquipmentForUser(ApiEquipment equipment, string userId)
         {
-            var account = await _accountRepository.getUserByUsername(userName);
+            var account = await _accountRepository.getUserByUsername(userId);
             if (account.AccountStatistics.Gold < equipment.Cost)
             {
                 return "Insufficient gold!";
             }
             Equipment equip = await GetEquipmentFromDB(equipment);
-            EquipmentOwned equipOwned = CreateEquipmentForAccount(userName, equip);
+            EquipmentOwned equipOwned = CreateEquipmentForAccount(account.Id, equip);
             await _equipmentRepository.BuyEquipmentForAccount(equipOwned);
             account.AccountStatistics.Gold -= equipment.Cost;
             await _accountRepository.UpdateAccount();
             return "Equipment successfully added to your collection!";
         }
 
-        public async Task<IEnumerable<ApiEquipment>> getAllEquipmentsAvailableForAccount(String userName)
+        public async Task<IEnumerable<ApiEquipment>> getAllEquipmentsAvailableForAccount(String userId)
         {
-            var championsTask = await _equipmentRepository.getAllEquipmentsAvailableForAccount(userName);
+            var championsTask = await _equipmentRepository.getAllEquipmentsAvailableForAccount(userId);
             List<Equipment> champions = championsTask.ToList();
             List <ApiEquipment> championsToReturn = new List<ApiEquipment>();
 
@@ -53,11 +53,11 @@ namespace PVEMasters.Services.EquipmentService
             return EquipmentMapper.convertToApiModel(champion);
         }
 
-        private static EquipmentOwned CreateEquipmentForAccount(string userName, Equipment equip)
+        private static EquipmentOwned CreateEquipmentForAccount(string userId, Equipment equip)
         {
             return new EquipmentOwned
             {
-                AccountUserName = userName,
+                AccountId = userId,
                 EquipmentId = equip.Id
             };
         }
@@ -67,9 +67,9 @@ namespace PVEMasters.Services.EquipmentService
             return await _equipmentRepository.getEquipmentByName(equipment.Name);
         }
 
-        public async Task<IEnumerable<ApiEquipment>> getAccountEquipments(string userName)
+        public async Task<IEnumerable<ApiEquipment>> getAccountEquipments(string userId)
         {
-            var championsTask = await _equipmentRepository.getAccountEquipment(userName);
+            var championsTask = await _equipmentRepository.getAccountEquipment(userId);
             List<EquipmentOwned> equipments = championsTask.ToList();
             List<ApiEquipment> equipmentToReturn = new List<ApiEquipment>();
             equipments.ForEach(eq => equipmentToReturn.Add(EquipmentOwnedMapper.convertToApiModel(eq)));

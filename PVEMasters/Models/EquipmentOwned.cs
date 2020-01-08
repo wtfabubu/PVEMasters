@@ -5,10 +5,10 @@ namespace PVEMasters.Models
 {
     public partial class EquipmentOwned
     {
-        public int Id { get; set; }
-        public string AccountUserName { get; set; }
+        public string AccountId { get; set; }
         public int EquipmentId { get; set; }
 
+        public ApplicationUser Account { get; set; }
         public Equipment Equipment { get; set; }
     }
 }

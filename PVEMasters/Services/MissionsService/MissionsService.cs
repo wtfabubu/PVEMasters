@@ -23,9 +23,9 @@ namespace PVEMasters.Services.MissionsService
             _accountService = accountService;
         }
 
-        public async Task<IEnumerable<ApiMission>> getAllAvailableMissions(String userName)
+        public async Task<IEnumerable<ApiMission>> getAllAvailableMissions(String userId)
         {
-            var missionsTask = await _missionsRepository.getAllAvailableMissions(userName);
+            var missionsTask = await _missionsRepository.getAllAvailableMissions(userId);
             List<Mission> missions = missionsTask.ToList();
             List<ApiMission> missionsToReturn = new List<ApiMission>();
 
@@ -43,11 +43,11 @@ namespace PVEMasters.Services.MissionsService
             throw new NotImplementedException();
         }
 
-        public async Task StartMission(ApiMission mission, String userName)
+        public async Task StartMission(ApiMission mission, String userId)
         {
             var miss = MissionsMapper.converToDbModel(mission);
             
-            await _missionsRepository.StartMission(miss, userName);
+            await _missionsRepository.StartMission(miss, userId);
         }
 
         public async Task CompleteMission(ApiMission mission, String userName)
@@ -58,9 +58,9 @@ namespace PVEMasters.Services.MissionsService
             await _missionsRepository.CompleteMission(mission.MissionForAccountId);
         }
 
-        public async Task<IEnumerable<ApiMission>> GetAllMissionsWithGivenStatus(string userName, string status)
+        public async Task<IEnumerable<ApiMission>> GetAllMissionsWithGivenStatus(string userId, string status)
         {
-            var missions = await _missionsRepository.GetAllMissionsWithGivenStatus(userName, status);
+            var missions = await _missionsRepository.GetAllMissionsWithGivenStatus(userId, status);
             List<ApiMission> missionsToReturn = new List<ApiMission>();
             missions.ToList().ForEach(misson => missionsToReturn.Add(CreateMission(misson)));
             return missionsToReturn;

@@ -37,9 +37,12 @@ namespace PVEMasters.Services.AccountService
             if(countChampEquipped > 2)
             {
                 result = await BattleLogic(opponent, userName);
+                await _accountRepository.AddAccountToSafeList(opponent.UserName, userName);
+                await UpdateAccountAchivements(userName, result);
             }
             return result;
         }
+
 
         public int CreateAccountStatistic(AccountStatistic accountStatistic)
         {
@@ -117,6 +120,20 @@ namespace PVEMasters.Services.AccountService
             }
 
             return result;
+        }
+
+        private async Task UpdateAccountAchivements(string userName, string result)
+        {
+            var account = await _accountRepository.getUserByUsername(userName);
+            if (result == "Victory")
+            {
+                account.AccountStatistics.AchievementsCompleted += 3;
+            }
+            else
+            {
+                account.AccountStatistics.AchievementsCompleted -= 2;
+            }
+            await _accountRepository.UpdateAccount();
         }
     }
 }

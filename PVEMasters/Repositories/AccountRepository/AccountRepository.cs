@@ -47,7 +47,8 @@ namespace PVEMasters.Repositories.AccountRepository
                                        .ThenInclude(champOwnedStat => champOwnedStat.Stat)
                                        .Include(account => account.ChampionsOwned)
                                        .ThenInclude(champOwned => champOwned.Champions)
-                                       .Where(user => user.UserName != userName && (user.AccountStatistics.Lvl <= currentUser.AccountStatistics.Lvl+2 && user.AccountStatistics.Lvl >= currentUser.AccountStatistics.Lvl - 2) && user.ChampionsOwned.Where(champ => champ.Equipped == true).Count() > 2)
+                                       .Where(user => user.UserName != userName && (user.AccountStatistics.Lvl <= currentUser.AccountStatistics.Lvl+2 && user.AccountStatistics.Lvl >= currentUser.AccountStatistics.Lvl - 2) && user.ChampionsOwned.Where(champ => champ.Equipped == true).Count() > 2 && 
+                                       _context.PvPSafeList.Where(safelist => safelist.AttackerId == _context.ApplicationUsers.Where(usr => usr.UserName == userName).FirstOrDefault().Id).Where(safe => safe.DeffenderId == user.Id).Count() == 0)
                                        .ToListAsync();
         }
 
@@ -62,6 +63,35 @@ namespace PVEMasters.Repositories.AccountRepository
         public async Task<int> UpdateAccount()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        private async Task<bool> canAttack(string DefenderId,string userName)
+        {
+            var attackerId = await _context.ApplicationUsers.Where(user => user.UserName == userName).FirstOrDefaultAsync();
+            var attackerVictims = await _context.PvPSafeList.Where(safelist => safelist.AttackerId == attackerId.Id).ToListAsync();
+            foreach(var victim in attackerVictims)
+            {
+                if(victim.DeffenderId == DefenderId)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public async Task AddAccountToSafeList(string opponendUsername, string attackerUserName)
+        {
+            var opponent = await _context.Users.Where(user => user.UserName == opponendUsername).FirstAsync();
+            var attacker = await _context.Users.Where(user => user.UserName == attackerUserName).FirstAsync();
+            PvPSafeList safeList = new PvPSafeList { AttackerId = attacker.Id, DeffenderId = opponent.Id};
+            _context.Add(safeList);
+            try
+            {
+                await _context.SaveChangesAsync();
+            } catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+            }
         }
     }
 }

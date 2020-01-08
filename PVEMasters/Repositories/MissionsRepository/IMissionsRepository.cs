@@ -10,11 +10,11 @@ namespace PVEMasters.Repositories.MissionsRepository
     public interface IMissionsRepository
     {
 
-        Task<IEnumerable<Mission>> getAllAvailableMissions(String userName);
+        Task<IEnumerable<Mission>> getAllAvailableMissions(String userId);
 
-        Task<IEnumerable<MissionsForAccount>> GetAllMissionsWithGivenStatus(String userName, String status);
+        Task<IEnumerable<MissionsForAccount>> GetAllMissionsWithGivenStatus(String userId, String status);
 
-        Task StartMission(Mission mission, String userName);
+        Task StartMission(Mission mission, String userId);
 
         Task CompleteMission(int missionId);
     }

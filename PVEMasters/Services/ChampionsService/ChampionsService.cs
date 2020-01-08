@@ -27,24 +27,24 @@ namespace PVEMasters.Services.ChampionsService
             return _championsRepository.AddChampion(champ);
         }
 
-        public async Task<string> BuyChampionForUser(ApiChampions champion, string userName)
+        public async Task<string> BuyChampionForUser(ApiChampions champion, string userId)
         {
-            var account = await _accountRepository.getUserByUsername(userName);
+            var account = await _accountRepository.getUserByUsername(userId);
             if (account.AccountStatistics.Gold < champion.Cost)
             {
                 return "Insufficient gold!";
             }
             Champions champ = await GetChampionFromDB(champion);
-            ChampionsOwned champOwned = CreateChampionForAccount(userName, champ);
+            ChampionsOwned champOwned = CreateChampionForAccount(userId, champ);
             await _championsRepository.BuyChampionForAccount(champOwned);
             account.AccountStatistics.Gold -= champion.Cost;
             await _accountRepository.UpdateAccount();
             return "Character successfully added to your collection!";
         }
 
-        public async Task<IEnumerable<ApiChampionsOwned>> getAccountChampions(String userName)
+        public async Task<IEnumerable<ApiChampionsOwned>> getAccountChampions(String userId)
         {
-            var championsTask = await _championsRepository.getAccountChampions(userName);
+            var championsTask = await _championsRepository.getAccountChampions(userId);
             List<ChampionsOwned> champions = championsTask.ToList();
             List<ApiChampionsOwned> championsToReturn = new List<ApiChampionsOwned>();
 
@@ -52,9 +52,9 @@ namespace PVEMasters.Services.ChampionsService
             return championsToReturn;
         }
 
-        public async Task<IEnumerable<ApiChampions>> getAvailableChampionsForAccount(string userName)
+        public async Task<IEnumerable<ApiChampions>> getAvailableChampionsForAccount(string userId)
         {
-            var championsTask = await _championsRepository.getAvailableChampionsForAccount(userName);
+            var championsTask = await _championsRepository.getAvailableChampionsForAccount(userId);
             List<Champions> champions = championsTask.ToList();
             List<ApiChampions> championsToReturn = new List<ApiChampions>();
 

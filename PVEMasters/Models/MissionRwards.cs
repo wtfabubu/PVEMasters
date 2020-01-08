@@ -5,7 +5,6 @@ namespace PVEMasters.Models
 {
     public partial class MissionRwards
     {
-        public int Id { get; set; }
         public string RewardName { get; set; }
         public int MissionId { get; set; }
         public int Amount { get; set; }

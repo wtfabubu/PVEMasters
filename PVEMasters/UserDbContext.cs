@@ -30,6 +30,7 @@ namespace PVEMasters
         public virtual DbSet<Stat> Stat { get; set; }
         public virtual DbSet<EquipmentOwned> EquipmentOwned { get; set; }
         public virtual DbSet<ChampionOwnedStats> ChampionOwnedStats { get; set; }
+        public virtual DbSet<PvPSafeList> PvPSafeList { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -86,7 +87,7 @@ namespace PVEMasters
 
             modelBuilder.Entity<ChampionsStats>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasKey(e => new { e.ChampionId, e.StatId });
 
                 entity.HasOne(d => d.Champion)
                     .WithMany(p => p.ChampionsStats)
@@ -114,9 +115,12 @@ namespace PVEMasters
 
             modelBuilder.Entity<EquipmentOwned>(entity =>
             {
-                entity.Property(e => e.AccountUserName)
+
+                entity.HasKey(e => new { e.AccountId, e.EquipmentId });
+
+                entity.Property(e => e.AccountId)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.Equipment)
                     .WithMany(p => p.EquipmentOwned)
@@ -127,7 +131,7 @@ namespace PVEMasters
 
             modelBuilder.Entity<EquipmentStats>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasKey(e => new { e.EquipmentId, e.StatId });
 
                 entity.HasOne(d => d.Equipment)
                     .WithMany(p => p.EquipmentStats)
@@ -149,7 +153,7 @@ namespace PVEMasters
 
             modelBuilder.Entity<MissionRwards>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasKey(e => new { e.RewardName, e.MissionId });
 
                 entity.Property(e => e.RewardName)
                     .IsRequired()
@@ -170,9 +174,10 @@ namespace PVEMasters
 
             modelBuilder.Entity<MissionsForAccount>(entity =>
             {
-                entity.Property(e => e.AccountUsername)
+
+                entity.Property(e => e.AccountId)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(450);
 
                 entity.HasOne(d => d.Mission)
                     .WithMany(p => p.MissionsForAccount)
@@ -184,6 +189,19 @@ namespace PVEMasters
                     .WithMany(p => p.MissionsForAccount)
                     .HasForeignKey(d => d.StatusId)
                     .HasConstraintName("FK_MissionsForAccount_MissionStatus");
+            });
+
+            modelBuilder.Entity<PvPSafeList>(entity =>
+            {
+                entity.ToTable("PvPSafeList");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.AttackerId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.Property(e => e.DeffenderId)
+                    .IsRequired()
+                    .HasMaxLength(450);
             });
 
             modelBuilder.Entity<MissionStatus>(entity =>

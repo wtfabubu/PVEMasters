@@ -58,15 +58,15 @@ namespace PVEMasters.Controllers
                 return Ok(response);
             }
 
-            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1, Equipped = true };
-            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 5, Experience = 0, Lvl = 1, Equipped = true };
-            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 6, Experience = 0, Lvl = 1, Equipped = true };
+            ChampionsOwned champ1 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 1, Experience = 0, Lvl = 1, Equipped = true };
+            ChampionsOwned champ2 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 4, Experience = 0, Lvl = 1, Equipped = true };
+            ChampionsOwned champ3 = new ChampionsOwned { AccountId = accountService.GetAccountIdByUserName(credentials.Username), ChampionsId = 9, Experience = 0, Lvl = 1, Equipped = true };
             championsService.AddChampion(champ1);
             championsService.AddChampion(champ2);
             championsService.AddChampion(champ3);
             await signInManager.SignInAsync(user, isPersistent: false);
-
-            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username };
+            var account = await accountService.GetUserProfileByUserName(user.UserName);
+            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username, AccLvl = account.AccountStatistics.Lvl };
             return Ok(response);
 
         }
@@ -85,8 +85,8 @@ namespace PVEMasters.Controllers
             }
 
             var user = await _userManager.FindByEmailAsync(credentials.Username);
-
-            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username };
+            var account = await accountService.GetUserProfileByUserName(user.UserName);
+            response.auth = new ApiAuth { Token = CreateToken(user), UserName = credentials.Username, AccLvl = account.AccountStatistics.Lvl };
             return Ok(response);
         }
 

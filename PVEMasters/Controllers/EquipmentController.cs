@@ -28,8 +28,7 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> GetEquipments()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userName = user.UserName;
-            var result = await _equipmentService.getAccountEquipments(userName);
+            var result = await _equipmentService.getAccountEquipments(user.Id);
             return Ok(new List<ApiEquipment>(result.ToList()));
         }
 

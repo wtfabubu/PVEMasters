@@ -15,5 +15,6 @@ namespace PVEMasters.Repositories.AccountRepository
         Task<ICollection<ApplicationUser>> GetAvailablePVPAccounts(string userName);
         string GetAccountIdByUserName(string username);
         Task<int> UpdateAccount();
+        Task AddAccountToSafeList(string opponendUsername, string attackerUserName);
     }
 }

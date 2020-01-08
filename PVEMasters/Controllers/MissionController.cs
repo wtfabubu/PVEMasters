@@ -30,7 +30,7 @@ namespace PVEMasters.Controllers
         {
 
             var user = await _userManager.GetUserAsync(User);
-            var result = await _missionsService.getAllAvailableMissions(user.UserName);
+            var result = await _missionsService.getAllAvailableMissions(user.Id);
             return Ok(new List<ApiMission>(result.ToList()));
         }
 
@@ -38,7 +38,7 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> Post([FromBody]ApiMission mission)
         {
             var user = await _userManager.GetUserAsync(User);
-            await _missionsService.StartMission(mission, user.UserName);
+            await _missionsService.StartMission(mission, user.Id);
             return Ok();
         }
 
@@ -55,7 +55,7 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> GetAllInProgressMissionForAccount()
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.UserName, "In Progress");
+            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.Id, "In Progress");
             return Ok(result);
         }
 
@@ -63,7 +63,7 @@ namespace PVEMasters.Controllers
         public async Task<IActionResult> GetAllCompletedMissionForAccount()
         {
             var user = await _userManager.GetUserAsync(User);
-            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.UserName, "Completed");
+            var result = await _missionsService.GetAllMissionsWithGivenStatus(user.Id, "Completed");
             return Ok(result);
         }
 
